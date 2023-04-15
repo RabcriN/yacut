@@ -1,17 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, URLField
-from wtforms.validators import DataRequired, Length, ValidationError
+from wtforms.validators import DataRequired, Length
+
+from .models import URLMap
 
 
 def validate_short(form, field):
     if field.data is not None:
-        not_valid = (".,/!?-@$АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-                     "абвгдеёжзийклмнопрстуфхцчшщъыьэюя ")
-        for elem in field.data:
-            if elem in not_valid:
-                raise ValidationError(
-                    'Указано недопустимое имя для короткой ссылки'
-                )
+        URLMap.check_url(field.data)
 
 
 class LinkForm(FlaskForm):
